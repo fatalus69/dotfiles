@@ -10,9 +10,9 @@ alias drush='ddev drush'
 
 # Source bash/zshrc
 if [[ $SHELL == *"zsh" ]]; then
-    alias sb="source $HOME/.zshrc"
+    alias sz="source $HOME/.zshrc"
 elif [[ $SHELL == *"bash" ]]; then
-    alias sz="source $HOME/.bashrc"
+    alias sb="source $HOME/.bashrc"
 fi
 
 # alias custom scripts
