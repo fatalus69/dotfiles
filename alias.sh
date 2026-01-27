@@ -9,8 +9,17 @@ alias onefetch='onefetch --nerd-fonts --include-hidden --no-bots'
 alias drush='ddev drush'
 
 # Source bash/zshrc
-alias sb="source $HOME/.bashrc"
-alias sz="source $HOME/.zshrc"
+if [[ $SHELL == *"zsh" ]]; then
+    alias sb="source $HOME/.zshrc"
+elif [[ $SHELL == *"bash" ]]; then
+    alias sz="source $HOME/.bashrc"
+fi
 
-# Source custom scripts
-alias update_all="bash $SCRIPT_DIR/scripts/update_all.sh"
+# alias custom scripts
+for script in "$SCRIPT_DIR/scripts/"*.sh; do
+    # Looks nice, especially when I make more scripts,
+    # but I don't see the path to it when I do which NAME
+
+    script_name=$(basename "$script" .sh)
+    alias "$script_name"="bash $script"
+done
