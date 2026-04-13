@@ -5,6 +5,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 CURRENT_SHELL="bash"
 
+source "$SCRIPT_DIR/../utils/variables.sh"
+
 # Perhaps add more shells except fish
 if [[ -n "${ZSH_VERSION:-}" ]]; then
     CURRENT_SHELL="zsh" 
@@ -25,9 +27,8 @@ if [[ -d "$SCRIPT_DIR/../.config/" ]]; then
     cp -r "$SCRIPT_DIR/../.config/*" "$HOME/.config/"
 fi
 
-# Cllear before writing it. Perhpas do something else, so this can run multiple types if you want specific things. Would require to set something that indicates that the rc file was generated from my script
-echo "#!/usr/bin/env $CURRENT_SHELL" > "$HOME/.${CURRENT_SHELL}rc"
-echo "" >> "$HOME/.${CURRENT_SHELL}rc"
+# Cllear before writing it. Perhaps do something else, so this can run multiple times if you want specific things. Would require to set something that indicates that the rc file was generated from my script
+{ echo "#!/usr/bin/env $CURRENT_SHELL"; echo ""; }> "$HOME/.${CURRENT_SHELL}rc"
 
 PS3="What do you want to be in your .${CURRENT_SHELL}rc file? "
 types=("All" "Aliases" "Exports" "Completions" "Prompt")
@@ -56,6 +57,7 @@ select type in "${types[@]}"; do
             ;;
         *)
             echo "Error: Invalid selection."
+            printf "%sError: Invalid selection.%s" "$RED" "$RESET"
             echo "Restoring changes from $HOME/.${CURRENT_SHELL}rc.bak ..."
 
             mv "$HOME/.${CURRENT_SHELL}rc.bak" "$HOME/.${CURRENT_SHELL}rc"

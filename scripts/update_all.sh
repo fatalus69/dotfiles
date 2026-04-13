@@ -7,7 +7,7 @@ set -eou pipefail
 shopt -s nullglob
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../variables.sh"
+source "$SCRIPT_DIR/../utils/variables.sh"
 
 printf "Updating all Repositories in %s/ \n\n" "$(pwd)"
 
@@ -35,7 +35,8 @@ for dir in */ ; do
                 composer -d "$dir" install --no-interaction --quiet --prefer-dist > /dev/null 2>&1
             fi
 
-            if [ -f "$dir/package.json" ]; then
+            # Dont install npm deps in non ddev projects => needs to happen in container
+            if [[ -f "$dir/package.json" ]] && [[ -e "$dir/.ddev" ]]; then
                 npm --prefix "$dir" install --silent > /dev/null 2>&1
             fi
         else
